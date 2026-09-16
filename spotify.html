@@ -1,0 +1,570 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify - Music Player</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: white;
+        }
+
+        /* Main Layout */
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #000;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        .logo span {
+            color: #1db954;
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu li {
+            margin: 22px 0;
+        }
+
+        .menu a {
+            color: #b3b3b3;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .menu a:hover {
+            color: white;
+        }
+
+        .playlist-title {
+            color: #aaa;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .playlist {
+            list-style: none;
+        }
+
+        .playlist li {
+            color: #aaa;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            background: linear-gradient(#202020, #121212);
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+
+        /* Top Bar */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+        }
+
+        .arrows button {
+            background: #090909;
+            border: none;
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            font-size: 20px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .profile {
+            background: #000;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        /* Heading */
+        .content {
+            padding: 10px 30px;
+        }
+
+        .content h1 {
+            font-size: 30px;
+            margin-bottom: 25px;
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: #181818;
+            padding: 15px;
+            border-radius: 8px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            background: #282828;
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
+
+        .card p {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        /* Sections */
+        .section {
+            margin-top: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+        }
+
+        .show {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        /* Bottom Music Player */
+        .player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: #181818;
+            border-top: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 25px;
+        }
+
+        .song {
+            display: flex;
+            align-items: center;
+            width: 25%;
+        }
+
+        .song img {
+            width: 55px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 12px;
+        }
+
+        .song h4 {
+            font-size: 14px;
+        }
+
+        .song p {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .controls {
+            text-align: center;
+            width: 45%;
+        }
+
+        .control-buttons button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            margin: 0 12px;
+            cursor: pointer;
+        }
+
+        .play {
+            background: white !important;
+            color: black !important;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+        }
+
+        .progress {
+            width: 70%;
+            height: 4px;
+            background: #555;
+            margin: 8px auto;
+            border-radius: 5px;
+        }
+
+        .progress-bar {
+            width: 35%;
+            height: 100%;
+            background: #1db954;
+            border-radius: 5px;
+        }
+
+        .volume {
+            width: 20%;
+            text-align: right;
+        }
+
+        .volume input {
+            width: 100px;
+            accent-color: #1db954;
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 10px;
+            }
+
+            .logo {
+                font-size: 18px;
+                text-align: center;
+            }
+
+            .menu a,
+            .playlist-title,
+            .playlist {
+                font-size: 0;
+            }
+
+            .menu li {
+                text-align: center;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .volume {
+                display: none;
+            }
+
+            .controls {
+                width: 65%;
+            }
+
+            .song {
+                width: 30%;
+            }
+
+            .song div {
+                display: none;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .song {
+                display: none;
+            }
+
+            .controls {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            🎵 <span>Spotify</span>
+        </div>
+
+        <ul class="menu">
+            <li><a href="#">🏠 Home</a></li>
+            <li><a href="#">🔍 Search</a></li>
+            <li><a href="#">📚 Your Library</a></li>
+        </ul>
+
+        <p class="playlist-title">YOUR PLAYLISTS</p>
+
+        <ul class="playlist">
+            <li>My Playlist #1</li>
+            <li>Chill Music</li>
+            <li>Workout Music</li>
+            <li>Romantic Songs</li>
+            <li>Bollywood Hits</li>
+        </ul>
+
+    </aside>
+
+
+    <!-- Main -->
+    <main class="main">
+
+        <!-- Topbar -->
+        <div class="topbar">
+
+            <div class="arrows">
+                <button>‹</button>
+                <button>›</button>
+            </div>
+
+            <div class="profile">
+                👤 Urvashi
+            </div>
+
+        </div>
+
+
+        <div class="content">
+
+            <!-- Recently Played -->
+            <div class="section">
+
+                <div class="section-header">
+                    <h2>Recently Played</h2>
+                    <span class="show">Show all</span>
+                </div>
+
+                <div class="cards">
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=1">
+                        <h3>Daily Mix 1</h3>
+                        <p>Arijit Singh, Atif Aslam</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=2">
+                        <h3>Chill Vibes</h3>
+                        <p>Relaxing music</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=3">
+                        <h3>Bollywood Hits</h3>
+                        <p>Best Hindi songs</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=4">
+                        <h3>Top Songs</h3>
+                        <p>Popular songs</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=5">
+                        <h3>Love Songs</h3>
+                        <p>Romantic collection</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Made For You -->
+            <div class="section">
+
+                <div class="section-header">
+                    <h2>Made For You</h2>
+                    <span class="show">Show all</span>
+                </div>
+
+                <div class="cards">
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=6">
+                        <h3>Daily Mix 1</h3>
+                        <p>Your favorite artists</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=7">
+                        <h3>Daily Mix 2</h3>
+                        <p>Fresh music for you</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=8">
+                        <h3>Discover Weekly</h3>
+                        <p>New music every week</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=9">
+                        <h3>Release Radar</h3>
+                        <p>New releases</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=10">
+                        <h3>My Mix</h3>
+                        <p>Music picked for you</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Popular -->
+            <div class="section">
+
+                <div class="section-header">
+                    <h2>Popular Songs</h2>
+                    <span class="show">Show all</span>
+                </div>
+
+                <div class="cards">
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=11">
+                        <h3>Perfect</h3>
+                        <p>Ed Sheeran</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=12">
+                        <h3>Kesariya</h3>
+                        <p>Arijit Singh</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=13">
+                        <h3>Apna Bana Le</h3>
+                        <p>Arijit Singh</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=14">
+                        <h3>Shape Of You</h3>
+                        <p>Ed Sheeran</p>
+                    </div>
+
+                    <div class="card">
+                        <img src="https://picsum.photos/300?random=15">
+                        <h3>Until I Found You</h3>
+                        <p>Stephen Sanchez</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- Music Player -->
+<div class="player">
+
+    <div class="song">
+
+        <img src="https://picsum.photos/100?random=20">
+
+        <div>
+            <h4>Until I Found You</h4>
+            <p>Stephen Sanchez</p>
+        </div>
+
+    </div>
+
+
+    <div class="controls">
+
+        <div class="control-buttons">
+
+            <button>🔀</button>
+            <button>⏮</button>
+            <button class="play">▶</button>
+            <button>⏭</button>
+            <button>🔁</button>
+
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar"></div>
+        </div>
+
+    </div>
+
+
+    <div class="volume">
+        🔊
+        <input type="range">
+    </div>
+
+</div>
+
+</body>
+</html>
+```
