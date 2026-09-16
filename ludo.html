@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ludo Game</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial;
+        }
+
+        .board {
+            width: 600px;
+            height: 600px;
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            grid-template-rows: repeat(15, 1fr);
+            border: 4px solid #222;
+            background: white;
+        }
+
+        .cell {
+            border: 1px solid #bbb;
+            background: white;
+        }
+
+        /* Home areas */
+        .red {
+            background: #ef5350;
+        }
+
+        .yellow {
+            background: #fdd835;
+        }
+
+        .green {
+            background: #43e06f;
+        }
+
+        .blue {
+            background: #42a5f5;
+        }
+
+        .home {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 25px;
+            padding: 35px;
+            border: none;
+        }
+
+        .token {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .token::after {
+            content: "";
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+        }
+
+        .red .token::after {
+            background: #ef5350;
+        }
+
+        .yellow .token::after {
+            background: #fdd835;
+        }
+
+        .green .token::after {
+            background: #43e06f;
+        }
+
+        .blue .token::after {
+            background: #42a5f5;
+        }
+
+        /* Center */
+        .center {
+            grid-column: 7 / 10;
+            grid-row: 7 / 10;
+            background: conic-gradient(
+                #43e06f 0deg 90deg,
+                #fdd835 90deg 180deg,
+                #ef5350 180deg 270deg,
+                #42a5f5 270deg 360deg
+            );
+            clip-path: polygon(
+                50% 0,
+                100% 50%,
+                50% 100%,
+                0 50%
+            );
+            border: none;
+        }
+
+        /* Home positions */
+        .redHome {
+            grid-column: 1 / 7;
+            grid-row: 1 / 7;
+        }
+
+        .yellowHome {
+            grid-column: 10 / 16;
+            grid-row: 1 / 7;
+        }
+
+        .blueHome {
+            grid-column: 1 / 7;
+            grid-row: 10 / 16;
+        }
+
+        .greenHome {
+            grid-column: 10 / 16;
+            grid-row: 10 / 16;
+        }
+
+        /* Colored paths */
+        .path-red {
+            background: #ef5350;
+        }
+
+        .path-yellow {
+            background: #fdd835;
+        }
+
+        .path-green {
+            background: #43e06f;
+        }
+
+        .path-blue {
+            background: #42a5f5;
+        }
+
+        .safe {
+            background: white !important;
+        }
+
+        @media(max-width:650px) {
+            .board {
+                width: 95vw;
+                height: 95vw;
+            }
+
+            .home {
+                padding: 15px;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="board">
+
+    <!-- RED HOME -->
+    <div class="home red redHome">
+        <div class="token"></div>
+        <div class="token"></div>
+        <div class="token"></div>
+        <div class="token"></div>
+    </div>
+
+    <!-- YELLOW HOME -->
+    <div class="home yellow yellowHome">
+        <div class="token"></div>
+        <div class="token"></div>
+        <div class="token"></div>
+        <div class="token"></div>
+    </div>
+
+    <!-- BLUE HOME -->
+    <div class="home blue blueHome">
+        <div class="token"></div>
+        <div class="token"></div>
+        <div class="token"></div>
+        <div class="token"></div>
+    </div>
+
+    <!-- GREEN HOME -->
+    <div class="home green greenHome">
+        <div class="token"></div>
+        <div class="token"></div>
+        <div class="token"></div>
+        <div class="token"></div>
+    </div>
+
+    <!-- CENTER -->
+    <div class="center"></div>
+
+    <!-- RED PATH -->
+    <div class="cell path-red" style="grid-column:2;grid-row:7"></div>
+    <div class="cell path-red" style="grid-column:3;grid-row:7"></div>
+    <div class="cell path-red" style="grid-column:4;grid-row:7"></div>
+    <div class="cell path-red" style="grid-column:5;grid-row:7"></div>
+    <div class="cell path-red" style="grid-column:6;grid-row:7"></div>
+
+    <!-- YELLOW PATH -->
+    <div class="cell path-yellow" style="grid-column:7;grid-row:2"></div>
+    <div class="cell path-yellow" style="grid-column:7;grid-row:3"></div>
+    <div class="cell path-yellow" style="grid-column:7;grid-row:4"></div>
+    <div class="cell path-yellow" style="grid-column:7;grid-row:5"></div>
+    <div class="cell path-yellow" style="grid-column:7;grid-row:6"></div>
+
+    <!-- GREEN PATH -->
+    <div class="cell path-green" style="grid-column:10;grid-row:9"></div>
+    <div class="cell path-green" style="grid-column:11;grid-row:9"></div>
+    <div class="cell path-green" style="grid-column:12;grid-row:9"></div>
+    <div class="cell path-green" style="grid-column:13;grid-row:9"></div>
+    <div class="cell path-green" style="grid-column:14;grid-row:9"></div>
+
+    <!-- BLUE PATH -->
+    <div class="cell path-blue" style="grid-column:9;grid-row:10"></div>
+    <div class="cell path-blue" style="grid-column:9;grid-row:11"></div>
+    <div class="cell path-blue" style="grid-column:9;grid-row:12"></div>
+    <div class="cell path-blue" style="grid-column:9;grid-row:13"></div>
+    <div class="cell path-blue" style="grid-column:9;grid-row:14"></div>
+
+</div>
+
+</body>
+</html>
